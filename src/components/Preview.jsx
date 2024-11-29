@@ -5,13 +5,30 @@ import "./preview.css";
 
 const Preview = ({ initialData, setOutput }) => {
   const [data, setData] = useState(initialData);
-  const [imageSrc, setImageSrc] = useState(null); // State to store the selected image
+  const [showOptions, setShowOptions] = useState(false);
+  const [imageSrc, setImageSrc] = useState(null);
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0]; // Get the selected file
-    if (file) {
-      setImageSrc(URL.createObjectURL(file)); // Update the image source
+  const databaseImages = [
+    "https://img.freepik.com/free-photo/colorful-design-with-spiral-design_188544-9588.jpg",
+    "https://fps.cdnpk.net/images/home/subhome-ai.webp?w=649&h=649",
+    "https://img.freepik.com/free-photo/abstract-autumn-beauty-multi-colored-leaf-vein-pattern-generated-by-ai_188544-9871.jpg",
+  ];
+
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setImageSrc(event.target.result);
+        setShowOptions(false); // Close options modal after selecting an image
+      };
+      reader.readAsDataURL(file);
     }
+  };
+
+  const handleDatabaseImageSelect = (url) => {
+    setImageSrc(url);
+    setShowOptions(false);
   };
 
   const handleInputChange = (field, value) => {
@@ -317,7 +334,7 @@ const Preview = ({ initialData, setOutput }) => {
         {/* Add Image Button */}
         {!imageSrc && (
           <button
-            onClick={() => document.getElementById("imageInput").click()}
+            onClick={() => setShowOptions(true)}
             style={{
               backgroundColor: "#007BFF",
               color: "white",
@@ -331,6 +348,39 @@ const Preview = ({ initialData, setOutput }) => {
           </button>
         )}
 
+        {showOptions && (
+          <div className="options-modal">
+            <button
+              onClick={() => document.getElementById("imageInput").click()}
+              style={{
+                backgroundColor: "#007BFF",
+                color: "white",
+                padding: "10px 20px",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                marginRight: "10px",
+              }}
+            >
+              Upload from PC
+            </button>
+
+            <button
+              onClick={() => setShowOptions(false)}
+              style={{
+                backgroundColor: "#007BFF",
+                color: "white",
+                padding: "10px 20px",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Select from Database
+            </button>
+          </div>
+        )}
+
         {/* Hidden file input */}
         <input
           type="file"
@@ -339,6 +389,25 @@ const Preview = ({ initialData, setOutput }) => {
           style={{ display: "none" }}
           onChange={handleImageChange}
         />
+
+        {showOptions && (
+          <div className="database-images">
+            {databaseImages.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt="Database"
+                onClick={() => handleDatabaseImageSelect(url)}
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  margin: "10px",
+                  cursor: "pointer",
+                }}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Display the uploaded image */}
         <div style={{ marginTop: "20px" }}>
