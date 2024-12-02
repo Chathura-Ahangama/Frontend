@@ -187,6 +187,16 @@ const Preview = ({ initialData, setOutput }) => {
   };
 
   const generatePDF = async () => {
+    // Select all the input and textarea elements to change the border color
+    const inputs = document.querySelectorAll(
+      ".business-proposal input[type='text'], .business-proposal textarea"
+    );
+
+    // Temporarily change the border color to white
+    inputs.forEach((input) => {
+      input.style.borderBottomColor = "white";
+    });
+
     const doc = new jsPDF();
     const sections = document.querySelectorAll(".business-proposal > section");
 
@@ -209,6 +219,11 @@ const Preview = ({ initialData, setOutput }) => {
       if (i > 0) doc.addPage();
       doc.addImage(imgData, "JPEG", 10, 10, imgWidth, imgHeight); // Use JPEG instead of PNG
     }
+
+    // Revert the border color back to the original after generating the PDF
+    inputs.forEach((input) => {
+      input.style.borderBottomColor = ""; // Resets to the original style
+    });
 
     // Save the PDF
     doc.save("business-proposal.pdf");
