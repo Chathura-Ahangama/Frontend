@@ -1,5 +1,6 @@
 import { useState } from "react";
 import jsPDF from "jspdf";
+import { MdDeleteOutline } from "react-icons/md";
 import html2canvas from "html2canvas";
 import "./preview.css";
 
@@ -192,9 +193,15 @@ const Preview = ({ initialData, setOutput }) => {
       ".business-proposal input[type='text'], .business-proposal textarea"
     );
 
+    const buttons = document.querySelectorAll(".image-button .delete-btn");
+
     // Temporarily change the border color to white
     inputs.forEach((input) => {
       input.style.borderBottomColor = "white";
+    });
+
+    buttons.forEach((button) => {
+      button.style.display = "none"; // Hide the buttons
     });
 
     const doc = new jsPDF();
@@ -275,6 +282,7 @@ const Preview = ({ initialData, setOutput }) => {
           <strong>
             {" "}
             <input
+              style={{ width: 250 }}
               type="text"
               className="customerName"
               value={data.customerName}
@@ -287,6 +295,7 @@ const Preview = ({ initialData, setOutput }) => {
           <strong>
             {" "}
             <input
+              style={{ width: 250 }}
               type="text"
               className="designation"
               value={data.designation}
@@ -297,6 +306,7 @@ const Preview = ({ initialData, setOutput }) => {
           <strong>
             {" "}
             <input
+              style={{ width: 250 }}
               type="text"
               className="companyName"
               value={data.companyName}
@@ -307,6 +317,7 @@ const Preview = ({ initialData, setOutput }) => {
           <strong>
             {" "}
             <input
+              style={{ width: 250 }}
               type="text"
               className="addressLine"
               value={data.addressLine}
@@ -441,7 +452,7 @@ const Preview = ({ initialData, setOutput }) => {
       </section>
 
       <section className="requirements">
-        <h2 onClick={clearOtherImage}>Requirements Section</h2>
+        <h2>Requirements Section</h2>
         <p>
           Please provide your requirements below. You can either type them
           manually or select from the options provided.
@@ -485,6 +496,7 @@ const Preview = ({ initialData, setOutput }) => {
 
         {!theImgSrc && (
           <button
+            className="image-button"
             onClick={() => setShowOption(true)}
             style={{
               backgroundColor: "#007BFF",
@@ -549,6 +561,9 @@ const Preview = ({ initialData, setOutput }) => {
         {/* Display the uploaded image */}
         <div style={{ marginTop: "20px" }}>
           {theImgSrc && (
+            <MdDeleteOutline className="delete-btn" onClick={clearOtherImage} />
+          )}
+          {theImgSrc && (
             <img
               src={theImgSrc}
               alt="Uploaded Preview"
@@ -572,7 +587,7 @@ const Preview = ({ initialData, setOutput }) => {
       </section> */}
 
       <section id="solution-diagram">
-        <h2 onClick={clearImage}>Solution Diagram</h2>
+        <h2>Solution Diagram</h2>
         <p>
           Detailed explanation and visual representation of the network
           architecture specific to the client's needs.
@@ -581,6 +596,7 @@ const Preview = ({ initialData, setOutput }) => {
         {/* Add Image Button */}
         {!imageSrc && (
           <button
+            className="image-button"
             onClick={() => setShowOptions(true)}
             style={{
               backgroundColor: "#007BFF",
@@ -644,6 +660,9 @@ const Preview = ({ initialData, setOutput }) => {
 
         {/* Display the uploaded image */}
         <div style={{ marginTop: "20px" }}>
+          {imageSrc && (
+            <MdDeleteOutline className="delete-btn" onClick={clearImage} />
+          )}
           {imageSrc && (
             <img
               src={imageSrc}
@@ -780,6 +799,7 @@ const Preview = ({ initialData, setOutput }) => {
               Upload Signature
             </label>
             <input
+              className="image-button"
               type="file"
               id="signatureInput"
               accept="image/*"

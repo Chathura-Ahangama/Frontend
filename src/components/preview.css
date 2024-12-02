@@ -73,6 +73,10 @@
   border-bottom: 2px solid #004085;
 }
 
+.business-proposal textarea {
+  border-bottom: 2px dotted rgb(255, 255, 255);
+}
+
 .business-proposal table {
   width: 100%;
   border-collapse: collapse;
