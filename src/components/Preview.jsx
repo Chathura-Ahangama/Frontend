@@ -6,7 +6,9 @@ import "./preview.css";
 const Preview = ({ initialData, setOutput }) => {
   const [data, setData] = useState(initialData);
   const [imageSrc, setImageSrc] = useState(null);
+  const [theImgSrc, setTheImgSrc] = useState(null);
   const [showOptions, setShowOptions] = useState(false);
+  const [showOption, setShowOption] = useState();
   const [selectedDatabaseImage, setSelectedDatabaseImage] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [address, setAddress] = useState("");
@@ -69,9 +71,25 @@ const Preview = ({ initialData, setOutput }) => {
     }
   };
 
+  const handleOtherImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setTheImgSrc(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleDatabaseImageSelect = (url) => {
     setImageSrc(url);
     setShowOptions(false);
+  };
+
+  const handleOtherDatabaseImageSelect = (url) => {
+    setTheImgSrc(url);
+    setShowOption(false);
   };
 
   const handleTextDropdownChange = (e) => {
@@ -99,6 +117,14 @@ const Preview = ({ initialData, setOutput }) => {
     }
   };
 
+  const handleOtherDropdownChange = (e) => {
+    const selectedImage = databaseImages.find(
+      (img) => img.topic === e.target.value
+    );
+    if (selectedImage) {
+      handleOtherDatabaseImageSelect(selectedImage.url);
+    }
+  };
   const handleInputChange = (field, value) => {
     setData((prev) => ({
       ...prev,
@@ -435,6 +461,84 @@ const Preview = ({ initialData, setOutput }) => {
             onChange={(e) => updateRequirementText(e.target.value)} // Updated function
             placeholder="Type your requirement here..."
           />
+        </div>
+
+        {!theImgSrc && (
+          <button
+            onClick={() => setShowOption(true)}
+            style={{
+              backgroundColor: "#007BFF",
+              color: "white",
+              padding: "10px 20px",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Add Image
+          </button>
+        )}
+
+        {showOption && (
+          <div className="options-modal">
+            <button
+              onClick={() => document.getElementById("imageInput").click()}
+              style={{
+                backgroundColor: "#007BFF",
+                color: "white",
+                padding: "10px 20px",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                marginRight: "10px",
+              }}
+            >
+              Upload from PC
+            </button>
+
+            <select
+              onChange={handleOtherDropdownChange}
+              style={{
+                backgroundColor: "#007BFF",
+                color: "white",
+                padding: "10px 20px",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              <option value="">Select from Database</option>
+              {databaseImages.map((image, index) => (
+                <option key={index} value={image.topic}>
+                  {image.topic}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Hidden file input */}
+        <input
+          type="file"
+          id="imageInput"
+          accept="image/*"
+          style={{ display: "none" }}
+          onChange={handleOtherImageChange}
+        />
+
+        {/* Display the uploaded image */}
+        <div style={{ marginTop: "20px" }}>
+          {theImgSrc && (
+            <img
+              src={theImgSrc}
+              alt="Uploaded Preview"
+              style={{
+                maxWidth: "100%",
+                marginTop: "10px",
+                borderRadius: "5px",
+              }}
+            />
+          )}
         </div>
       </section>
 
