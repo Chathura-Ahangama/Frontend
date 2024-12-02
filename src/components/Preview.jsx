@@ -5,22 +5,65 @@ import "./preview.css";
 
 const Preview = ({ initialData, setOutput }) => {
   const [data, setData] = useState(initialData);
-  const [showOptions, setShowOptions] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
+  const [showOptions, setShowOptions] = useState(false);
+  const [selectedDatabaseImage, setSelectedDatabaseImage] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [address, setAddress] = useState("");
+  const [solution, setSolution] = useState("");
+  const [charges, setCharges] = useState("");
+  const [signatureSrc, setSignatureSrc] = useState(null);
+  const [date, setDate] = useState("");
+  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedRequirement, setSelectedRequirement] = useState("");
+  const [requirementText, setRequirementText] = useState("");
+
+  const updateRequirementText = (newText) => {
+    setRequirementText(newText);
+  };
 
   const databaseImages = [
-    "https://img.freepik.com/free-photo/colorful-design-with-spiral-design_188544-9588.jpg",
-    "https://fps.cdnpk.net/images/home/subhome-ai.webp?w=649&h=649",
-    "https://img.freepik.com/free-photo/abstract-autumn-beauty-multi-colored-leaf-vein-pattern-generated-by-ai_188544-9871.jpg",
+    {
+      topic: "Sample 1",
+      url: "https://img.freepik.com/free-photo/colorful-design-with-spiral-design_188544-9588.jpg",
+    },
+    {
+      topic: "Sample 2",
+      url: "https://fps.cdnpk.net/images/home/subhome-ai.webp?w=649&h=649",
+    },
+    {
+      topic: "Sample 3",
+      url: "https://img.freepik.com/free-photo/abstract-autumn-beauty-multi-colored-leaf-vein-pattern-generated-by-ai_188544-9871.jpg",
+    },
   ];
 
+  const options = [
+    { type: "sample1", description: "This is a sample data solution" },
+    { type: "sample2", description: "Another sample description" },
+  ];
+
+  const sampleOptions = [
+    { type: "sample1", description: "This is a sample data solution" },
+    { type: "sample2", description: "This is another sample description" },
+    { type: "sample3", description: "Additional sample for selection" },
+  ];
+
+  const handleSignatureChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setSignatureSrc(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = (event) => {
         setImageSrc(event.target.result);
-        setShowOptions(false); // Close options modal after selecting an image
       };
       reader.readAsDataURL(file);
     }
@@ -29,6 +72,31 @@ const Preview = ({ initialData, setOutput }) => {
   const handleDatabaseImageSelect = (url) => {
     setImageSrc(url);
     setShowOptions(false);
+  };
+
+  const handleTextDropdownChange = (e) => {
+    const selectedType = e.target.value;
+    setSelectedOption(selectedType);
+
+    // Find the selected option's description
+    const selectedData = options.find((option) => option.type === selectedType);
+    if (selectedData) {
+      handleInputChange("ProjectScope", selectedData.description); // Update the data with the selected description
+    }
+  };
+
+  function clearImage() {
+    setImageSrc(null);
+    setShowOptions(false);
+  }
+
+  const handleDropdownChange = (e) => {
+    const selectedImage = databaseImages.find(
+      (img) => img.topic === e.target.value
+    );
+    if (selectedImage) {
+      handleDatabaseImageSelect(selectedImage.url);
+    }
   };
 
   const handleInputChange = (field, value) => {
@@ -223,13 +291,33 @@ const Preview = ({ initialData, setOutput }) => {
           We are pleased to submit the attached proposal for
           {data.solutionBOQ[0].Item}. Our proposal briefs on
           {
-            <textarea
-              className="text-box"
-              value={data.ProjectScope}
-              onChange={(e) =>
-                handleInputChange("ProjectScope", e.target.value)
-              }
-            />
+            <>
+              {/* Dropdown for selecting description */}
+              {!selectedOption && (
+                <select
+                  className="dropdown"
+                  value={selectedOption}
+                  onChange={handleTextDropdownChange}
+                >
+                  <option value="" disabled>
+                    Select an option
+                  </option>
+                  {options.map((option) => (
+                    <option key={option.type} value={option.type}>
+                      {option.type}
+                    </option>
+                  ))}
+                </select>
+              )}
+              <textarea
+                className="text-box"
+                placeholder="................................................................................................................................................................................................................................................................................................................................................................................................................................................"
+                value={data.ProjectScope}
+                onChange={(e) =>
+                  handleInputChange("ProjectScope", e.target.value)
+                }
+              />
+            </>
           }
           .
         </p>
@@ -306,13 +394,48 @@ const Preview = ({ initialData, setOutput }) => {
         <img src="/diagram.png" style={{ width: 640 }} alt="Strengths" />
       </section>
 
-      <section id="your-requirements">
-        <h2>Your Requirements</h2>
-        <textarea
-          className="text-box"
-          value={data.requirements}
-          onChange={(e) => handleInputChange("requirements", e.target.value)}
-        />
+      <section className="requirements">
+        <h2>Requirements Section</h2>
+        <p>
+          Please provide your requirements below. You can either type them
+          manually or select from the options provided.
+        </p>
+        <div className="requirement-input">
+          {!requirementText && (
+            <select
+              id="requirementDropdown"
+              className="dropdown"
+              value={selectedRequirement} // Updated state variable
+              onChange={(e) => {
+                const selectedValue = e.target.value;
+                setSelectedRequirement(selectedValue); // Updated function
+                const foundDescription = sampleOptions.find(
+                  (option) => option.type === selectedValue
+                )?.description; // Match description
+                updateRequirementText(foundDescription || ""); // Updated function
+              }}
+            >
+              <option value="" disabled>
+                Select an option
+              </option>
+              {sampleOptions.map((option) => (
+                <option key={option.type} value={option.type}>
+                  {option.type}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+        <div className="requirement-text">
+          <label htmlFor="requirementTextarea">Enter Requirement:</label>
+          <textarea
+            id="requirementTextarea"
+            className="text-box"
+            value={requirementText} // Updated state variable
+            onChange={(e) => updateRequirementText(e.target.value)} // Updated function
+            placeholder="Type your requirement here..."
+          />
+        </div>
       </section>
 
       {/* <section id="proposed-solution">
@@ -325,7 +448,7 @@ const Preview = ({ initialData, setOutput }) => {
       </section> */}
 
       <section id="solution-diagram">
-        <h2>Solution Diagram</h2>
+        <h2 onClick={clearImage}>Solution Diagram</h2>
         <p>
           Detailed explanation and visual representation of the network
           architecture specific to the client's needs.
@@ -365,8 +488,8 @@ const Preview = ({ initialData, setOutput }) => {
               Upload from PC
             </button>
 
-            <button
-              onClick={() => setShowOptions(false)}
+            <select
+              onChange={handleDropdownChange}
               style={{
                 backgroundColor: "#007BFF",
                 color: "white",
@@ -376,8 +499,13 @@ const Preview = ({ initialData, setOutput }) => {
                 cursor: "pointer",
               }}
             >
-              Select from Database
-            </button>
+              <option value="">Select from Database</option>
+              {databaseImages.map((image, index) => (
+                <option key={index} value={image.topic}>
+                  {image.topic}
+                </option>
+              ))}
+            </select>
           </div>
         )}
 
@@ -389,25 +517,6 @@ const Preview = ({ initialData, setOutput }) => {
           style={{ display: "none" }}
           onChange={handleImageChange}
         />
-
-        {showOptions && (
-          <div className="database-images">
-            {databaseImages.map((url, index) => (
-              <img
-                key={index}
-                src={url}
-                alt="Database"
-                onClick={() => handleDatabaseImageSelect(url)}
-                style={{
-                  width: "100px",
-                  height: "100px",
-                  margin: "10px",
-                  cursor: "pointer",
-                }}
-              />
-            ))}
-          </div>
-        )}
 
         {/* Display the uploaded image */}
         <div style={{ marginTop: "20px" }}>
@@ -424,7 +533,6 @@ const Preview = ({ initialData, setOutput }) => {
           )}
         </div>
       </section>
-
       <section id="your-investment">
         <h2>Your Investment</h2>
         {renderEditableTable(initialData.solutionBOQ, "solutionBOQ")}
@@ -464,23 +572,96 @@ const Preview = ({ initialData, setOutput }) => {
           <br />
           Dear Sir/Madam,
           <br />
-          We hereby confirmed our acceptance of the proposal submitted on [Date]
+          We hereby confirmed our acceptance of the proposal submitted on{" "}
+          {new Date().toISOString().split("T")[0]}
           under Proposal reference number,
           <br />
           <br />
-          <strong>Company Name:</strong> ………………………………………………………………….
+          <strong>Company Name:</strong>
+          <input
+            type="text"
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+            style={{
+              border: "none",
+              borderBottom: "1px solid #000",
+              width: "100%",
+              margin: "5px 0",
+            }}
+          />
           <br />
-          <strong>Address:</strong> ………………………………………………………………….
+          <strong>Address:</strong>
+          <input
+            type="text"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            style={{
+              border: "none",
+              borderBottom: "1px solid #000",
+              width: "100%",
+              margin: "5px 0",
+            }}
+          />
           <br />
-          <strong>Solution:</strong> ………………………………………………………………….
+          <strong>Solution:</strong>
+          <input
+            type="text"
+            value={solution}
+            onChange={(e) => setSolution(e.target.value)}
+            style={{
+              border: "none",
+              borderBottom: "1px solid #000",
+              width: "100%",
+              margin: "5px 0",
+            }}
+          />
           <br />
-          <strong>Initial & Monthly Charges:</strong> ………………………………………………………………….
+          <strong>Initial & Monthly Charges:</strong>
+          <input
+            type="text"
+            value={charges}
+            onChange={(e) => setCharges(e.target.value)}
+            style={{
+              border: "none",
+              borderBottom: "1px solid #000",
+              width: "100%",
+              margin: "5px 0",
+            }}
+          />
           <br />
           <br />
           <span style={{ display: "inline-block", width: "50%" }}>
-            ……………………………………
+            {signatureSrc ? (
+              <img
+                src={signatureSrc}
+                alt="Signature"
+                style={{ maxWidth: "100%", height: "auto", marginTop: "10px" }}
+              />
+            ) : (
+              "…………………………………"
+            )}
             <br />
-            Signature
+            <label
+              htmlFor="signatureInput"
+              style={{
+                display: "inline-block",
+                backgroundColor: "#007BFF",
+                color: "white",
+                padding: "5px 10px",
+                borderRadius: "5px",
+                cursor: "pointer",
+                marginTop: "10px",
+              }}
+            >
+              Upload Signature
+            </label>
+            <input
+              type="file"
+              id="signatureInput"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleSignatureChange}
+            />
           </span>
           <span
             style={{
@@ -489,7 +670,18 @@ const Preview = ({ initialData, setOutput }) => {
               textAlign: "right",
             }}
           >
-            …………………
+            <input
+              type="text"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              style={{
+                border: "none",
+                borderBottom: "1px solid #000",
+                width: "auto",
+                textAlign: "right",
+                margin: "5px 0",
+              }}
+            />
             <br />
             Date
           </span>
