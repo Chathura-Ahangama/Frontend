@@ -194,7 +194,7 @@ const Preview = ({ initialData, setOutput }) => {
     );
 
     const buttons = document.querySelectorAll(
-      ".image-button,#signatureInput ,.delete-btn,select"
+      ".image-button ,.delete-btn,select"
     );
 
     // Temporarily change the border color to white
@@ -794,6 +794,7 @@ const Preview = ({ initialData, setOutput }) => {
             <br />
             <label
               htmlFor="signatureInput"
+              className="image-button"
               style={{
                 display: "inline-block",
                 backgroundColor: "#007BFF",
@@ -824,8 +825,7 @@ const Preview = ({ initialData, setOutput }) => {
           >
             <input
               type="text"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
+              value={new Date().toISOString().split("T")[0]}
               style={{
                 border: "none",
                 borderBottom: "1px solid #000",
