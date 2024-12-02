@@ -108,6 +108,11 @@ const Preview = ({ initialData, setOutput }) => {
     setShowOptions(false);
   }
 
+  function clearOtherImage() {
+    setTheImgSrc(null);
+    setShowOption(false);
+  }
+
   const handleDropdownChange = (e) => {
     const selectedImage = databaseImages.find(
       (img) => img.topic === e.target.value
@@ -421,7 +426,7 @@ const Preview = ({ initialData, setOutput }) => {
       </section>
 
       <section className="requirements">
-        <h2>Requirements Section</h2>
+        <h2 onClick={clearOtherImage}>Requirements Section</h2>
         <p>
           Please provide your requirements below. You can either type them
           manually or select from the options provided.
@@ -453,7 +458,7 @@ const Preview = ({ initialData, setOutput }) => {
           )}
         </div>
         <div className="requirement-text">
-          <label htmlFor="requirementTextarea">Enter Requirement:</label>
+          <label htmlFor="requirementTextarea">Requirements:</label>
           <textarea
             id="requirementTextarea"
             className="text-box"
