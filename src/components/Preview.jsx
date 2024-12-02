@@ -193,7 +193,7 @@ const Preview = ({ initialData, setOutput }) => {
       ".business-proposal input[type='text'], .business-proposal textarea"
     );
 
-    const buttons = document.querySelectorAll(".image-button .delete-btn");
+    const buttons = document.querySelectorAll(".image-button ,.delete-btn");
 
     // Temporarily change the border color to white
     inputs.forEach((input) => {
@@ -201,7 +201,9 @@ const Preview = ({ initialData, setOutput }) => {
     });
 
     buttons.forEach((button) => {
-      button.style.display = "none"; // Hide the buttons
+      button.style.display = "none";
+
+      // Hide the buttons
     });
 
     const doc = new jsPDF();
