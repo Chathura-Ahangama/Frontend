@@ -245,13 +245,16 @@ const Preview = ({ initialData, setOutput }) => {
         <h2>Cover Page</h2>
         <label htmlFor="customerName">Business Proposal for</label>
         <input
+          style={{ width: 250 }}
           type="text"
           className="customerName"
           value={data.customerName}
           onChange={(e) => handleInputChange("customerName", e.target.value)}
         />
+        <br />
         <label htmlFor="referenceNumber">referenceNumber:</label>
         <input
+          style={{ width: 250 }}
           type="text"
           className="referenceNumber"
           value={data.referenceNumber}
@@ -457,34 +460,35 @@ const Preview = ({ initialData, setOutput }) => {
           Please provide your requirements below. You can either type them
           manually or select from the options provided.
         </p>
-        <div className="requirement-input">
-          {!requirementText && (
-            <select
-              id="requirementDropdown"
-              className="dropdown"
-              value={selectedRequirement} // Updated state variable
-              onChange={(e) => {
-                const selectedValue = e.target.value;
-                setSelectedRequirement(selectedValue); // Updated function
-                const foundDescription = sampleOptions.find(
-                  (option) => option.type === selectedValue
-                )?.description; // Match description
-                updateRequirementText(foundDescription || ""); // Updated function
-              }}
-            >
-              <option value="" disabled>
-                Select an option
-              </option>
-              {sampleOptions.map((option) => (
-                <option key={option.type} value={option.type}>
-                  {option.type}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
+
         <div className="requirement-text">
           <label htmlFor="requirementTextarea">Requirements:</label>
+          <div className="requirement-input">
+            {!requirementText && (
+              <select
+                id="requirementDropdown"
+                className="dropdown"
+                value={selectedRequirement} // Updated state variable
+                onChange={(e) => {
+                  const selectedValue = e.target.value;
+                  setSelectedRequirement(selectedValue); // Updated function
+                  const foundDescription = sampleOptions.find(
+                    (option) => option.type === selectedValue
+                  )?.description; // Match description
+                  updateRequirementText(foundDescription || ""); // Updated function
+                }}
+              >
+                <option value="" disabled>
+                  Select an option
+                </option>
+                {sampleOptions.map((option) => (
+                  <option key={option.type} value={option.type}>
+                    {option.type}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
           <textarea
             id="requirementTextarea"
             className="text-box"

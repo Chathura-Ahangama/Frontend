@@ -70,7 +70,7 @@
 
 .business-proposal input[type="text"]:focus,
 .business-proposal textarea:focus {
-  border-bottom: 2px solid #004085;
+  border-bottom: 2px solid #858d95;
 }
 
 .business-proposal textarea {
