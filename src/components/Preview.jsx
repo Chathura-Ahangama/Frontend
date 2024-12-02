@@ -194,7 +194,7 @@ const Preview = ({ initialData, setOutput }) => {
     );
 
     const buttons = document.querySelectorAll(
-      ".image-button ,.delete-btn,select"
+      ".image-button,#signatureInput ,.delete-btn,select"
     );
 
     // Temporarily change the border color to white
