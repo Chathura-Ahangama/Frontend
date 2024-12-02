@@ -27,15 +27,15 @@ const Preview = ({ initialData, setOutput }) => {
   const databaseImages = [
     {
       topic: "Sample 1",
-      url: "https://img.freepik.com/free-photo/colorful-design-with-spiral-design_188544-9588.jpg",
+      url: "/sample1.avif",
     },
     {
       topic: "Sample 2",
-      url: "https://fps.cdnpk.net/images/home/subhome-ai.webp?w=649&h=649",
+      url: "/sample2.jpg",
     },
     {
       topic: "Sample 3",
-      url: "https://img.freepik.com/free-photo/abstract-autumn-beauty-multi-colored-leaf-vein-pattern-generated-by-ai_188544-9871.jpg",
+      url: "/sample3.avif",
     },
   ];
 
