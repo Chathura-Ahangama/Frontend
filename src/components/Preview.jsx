@@ -193,7 +193,9 @@ const Preview = ({ initialData, setOutput }) => {
       ".business-proposal input[type='text'], .business-proposal textarea"
     );
 
-    const buttons = document.querySelectorAll(".image-button ,.delete-btn");
+    const buttons = document.querySelectorAll(
+      ".image-button ,.delete-btn,select"
+    );
 
     // Temporarily change the border color to white
     inputs.forEach((input) => {
